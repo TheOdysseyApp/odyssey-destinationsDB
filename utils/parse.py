@@ -24,4 +24,6 @@ def json_dump(file:str, parsed:List[Dict]):
 if __name__ == "__main__":
     # first arg is csv file to be parsed
     # second arg is json file that results will be written to
+    # this is mostly for testing
+    # realistically would only use parse_csv results and input those
     json_dump(sys.argv[2], parse_csv(sys.argv[1]))
