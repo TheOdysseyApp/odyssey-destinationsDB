@@ -1,11 +1,11 @@
-city,country
+city,country:
 Bangkok,Thailand
 London,United Kingdom
 Paris,France
 Dubai,United Arab Emirates
 Singapore,Singapore
-New York City,United States
 Kuala Lumpur,Malaysia
+New York City,USA
 Istanbul,Turkey
 Tokyo,Japan
 Seoul,South Korea
@@ -19,53 +19,83 @@ Osaka,Japan
 Vienna,Austria
 Shanghai,China
 Prague,Czech Republic
-Los Angeles,United States
+Los Angeles,USA
 Madrid,Spain
 Beijing,China
+Dublin,Ireland
 Sydney,Australia
-Las Vegas,United States
-Miami,United States
-San Francisco,United States
-Orlando,United States
+Las Vegas,USA
+Mumbai,India
+Miami,USA
+Atlanta,USA
+Orlando,USA
+Chicago,USA
+Toronto,Canada
+Washington D.C.,USA
+Macau,China
 Moscow,Russia
 Venice,Italy
 Mexico City,Mexico
-Berlin,Germany
-Melbourne,Australia
-Cairo,Egypt
 Athens,Greece
 Rio de Janeiro,Brazil
-Phuket,Thailand
-Bali,Indonesia
-Delhi,India
-Marrakech,Morocco
-Cape Town,South Africa
+Berlin,Germany
+San Diego,USA
+Florence,Italy
 Budapest,Hungary
+San Francisco,USA
+Lisbon,Portugal
+Cairo,Egypt
+Melbourne,Australia
+Cape Town,South Africa
+Cancun,Mexico
+Vancouver,Canada
+Lima,Peru
 Warsaw,Poland
 Brussels,Belgium
-Lisbon,Portugal
-Dublin,Ireland
-Edinburgh,Scotland
-Copenhagen,Denmark
+New Orleans,USA
+Auckland,New Zealand
+Krakow,Poland
+Delhi,India
 Stockholm,Sweden
-Oslo,Norway
-Helsinki,Finland
+Sao Paulo,Brazil
+Buenos Aires,Argentina
+Chiang Mai,Thailand
 St. Petersburg,Russia
-Tallinn,Estonia
-Riga,Latvia
-Vilnius,Lithuania
-Minsk,Belarus
-Kiev,Ukraine
-Bucharest,Romania
+Chengdu,China
+San Juan,Puerto Rico
+Edinburgh,Scotland
+Jerusalem,Israel
+Antalya,Turkey
+Marrakesh,Morocco
+Ho Chi Minh City,Vietnam
+Colombo,Sri Lanka
+Hanoi,Vietnam
+Jaipur,India
+Phuket,Thailand
+Pattaya,Thailand
+Goa,India
+Rotterdam,Netherlands
+Busan,South Korea
+Oslo,Norway
+Copenhagen,Denmark
 Sofia,Bulgaria
-Belgrade,Serbia
+Antwerp,Belgium
 Zagreb,Croatia
-Ljubljana,Slovenia
-Sarajevo,Bosnia and Herzegovina
-Skopje,North Macedonia
-Tirana,Albania
-Podgorica,Montenegro
-Pristina,Kosovo
-Chisinau,Moldova
-Yerevan,Armenia
-Tbilisi,Georgia
+Gothenburg,Sweden
+Montevideo,Uruguay
+Lyon,France
+Manama,Bahrain
+Geneva,Switzerland
+Hamburg,Germany
+Thessaloniki,Greece
+Bucharest,Romania
+Muscat,Oman
+Jeddah,Saudi Arabia
+Riga,Latvia
+Granada,Spain
+Ar-Rayyan,Qatar
+Riyadh,Saudi Arabia
+Kingston,Jamaica
+Porto,Portugal
+Johannesburg,South Africa
+Helsinki,Finland
