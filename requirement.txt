@@ -1,3 +1,5 @@
 python-dotenv==1.0.0
 pandas==2.0.2
 pydantic==1.10.7
+boto3
+amadeus
