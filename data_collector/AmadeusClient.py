@@ -6,9 +6,9 @@ load_dotenv()
 
 def create_amadeus_client():
     amadeus = Client(
-        client_id=os.getenv("AMADEUS_TEST_KEY"),
-        client_secret=os.getenv("AMADEUS_TEST_SECRET")#,
-        # host="production"
+        client_id=os.getenv("AMADEUS_PRODUCTION_KEY"),
+        client_secret=os.getenv("AMADEUS_PRODUCTION_SECRET"),
+        host="production"
     )
     return amadeus
 # try:
