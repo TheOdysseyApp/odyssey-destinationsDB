@@ -30,12 +30,10 @@ def main():
                     # print(response.data[0]["name"])
                     # print(response.data[0]["safetyScores"])
                     # print(response.data[0]["safetyScores"]["overall"])
-                    safety_data = {
-                        "safety": {"M": {"lgbtq":{"N":str(safety_scores["lgbtq"])}, "medical":{"N":str(safety_scores["medical"])}, 
+                    safety_data = {"M": {"lgbtq":{"N":str(safety_scores["lgbtq"])}, "medical":{"N":str(safety_scores["medical"])}, 
                                         "overall":{"N":str(safety_scores["overall"])}, "physical_harm":{"N":str(safety_scores["physicalHarm"])}, 
                                         "political_freedom":{"N":str(safety_scores["politicalFreedom"])}, 
                                         "theft":{"N":str(safety_scores["theft"])}, "women":{"N":str(safety_scores["women"])}}}
-                    }
                     # need to check that this is correct later
                     try:
                         response = client.update_item(
@@ -54,6 +52,7 @@ def main():
                         print(f"Error: {e}")
                 except ResponseError as error:
                     print(error)
+                    print(f'Couldn\'t update safety of {city}')
 
 
         else:
@@ -96,14 +95,14 @@ def main():
     # try:
     #     response = client.update_item(
     #         TableName="travel-destination",
-    #         Key={"city": {"S": "Barcelona"}},
-    #         UpdateExpression="set #lat = :lat, #long = :long",
+    #         Key={"city": {"S": "Barcelona"}}, <--replace barcelona with city name from parse_csv results
+    #         UpdateExpression="set #lat = :lat, #long = :long", <--- replace with internet speed stuff
     #         ExpressionAttributeNames={
     #             "#lat": "latitude",
     #             "#long": "longitude",
     #         },
     #         ExpressionAttributeValues={
-    #             ":lat": {"N": "41.397158"},
+    #             ":lat": {"N": "41.397158"}, <----change hard coded values to internet speed from parse_csv results
     #             ":long": {"N": "2.160873"},
     #         },
     #         ReturnValues="UPDATED_NEW",
