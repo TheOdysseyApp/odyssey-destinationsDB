@@ -64,7 +64,7 @@ def get_walkscore_response(wsapikey, latitude, longitude, address):
 
 
 if __name__ == "__main__":
-    wsapikey = '44b56077f3bb3c2aa17c974ed75414b7'
+    wsapikey = ''
     latitude = 40.7128  
     longitude = -74.0060 
     address = '123 Main St, City, Country'
