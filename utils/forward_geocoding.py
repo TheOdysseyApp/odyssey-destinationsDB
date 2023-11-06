@@ -1,8 +1,8 @@
 import requests
 
-def get_lat_lon_from_city(city):
-    # Endpoint for Nominatim's geocoding service
-    url = f"https://nominatim.openstreetmap.org/search?q={city}&format=json"
+def get_lat_lon_from_city_country(city, country):
+    # Endpoint for Nominatim's geocoding service, including the country in the query
+    url = f"https://nominatim.openstreetmap.org/search?city={city}&country={country}&format=json"
     response = requests.get(url)
 
     # Check if we got a valid response
@@ -10,7 +10,7 @@ def get_lat_lon_from_city(city):
         data = response.json()
 
         if not data:
-            print(f"No results found for {city}")
+            print(f"No results found for {city}, {country}")
             return None, None
 
         # Extract latitude and longitude from the first result
@@ -21,8 +21,9 @@ def get_lat_lon_from_city(city):
         print(f"API request failed with status code {response.status_code}")
         return None, None
 
-# Test the function
-city = "Bangkok"
-lat, lon = get_lat_lon_from_city(city)
+# Test the function with city and country
+city = "Osaka"
+country = "Japan"
+lat, lon = get_lat_lon_from_city_country(city, country)
 if lat and lon:
-    print(f"Latitude and Longitude for {city}: {lat}, {lon}")
+    print(f"Latitude and Longitude for {city}, {country}: {lat}, {lon}")
