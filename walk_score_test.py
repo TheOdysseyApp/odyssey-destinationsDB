@@ -1,7 +1,6 @@
 import boto3
 import requests
 
-
 dynamodb = boto3.resource('dynamodb')
 
 
@@ -86,17 +85,14 @@ def update_all_transportation_data(wsapikey, table_name):
             walkscore_response = get_walkscore_response(wsapikey, latitude, longitude, city_name)
             
             if walkscore_response.get('status') == 1:
-                walkscore = walkscore_response.get('walkscore')
-                description = walkscore_response.get('description')
-                bike_score = walkscore_response.get('bike', {}).get('score')
-                bike_description = walkscore_response.get('bike', {}).get('description')
-                transit_score = walkscore_response.get('transit', {}).get('score')
-                transit_description = walkscore_response.get('transit', {}).get('description')
+                walkscore = int(walkscore_response.get('walkscore', 0))  # Default to 0 if not found
+                bike_score = int(walkscore_response.get('bike', {}).get('score', 0))  # Default to 0 if not found
+                transit_score = int(walkscore_response.get('transit', {}).get('score', 0))  # Default to 0 if not found
                 
                 transportation_data = {
-                    "bike_score": {str(bike_score): bike_description},
-                    "walk_score": {str(walkscore): description},
-                    "transit_score": {str(transit_score): transit_description}
+                    "bike_score": bike_score,
+                    "walk_score": walkscore,
+                    "transit_score": transit_score
                 }
 
                 upload_transportation_data(table_name, city_name, transportation_data)
@@ -105,25 +101,31 @@ def update_all_transportation_data(wsapikey, table_name):
     
     
 def upload_transportation_data(table_name, city_name, transportation_data):
-        table = dynamodb.Table(table_name)
-        update_expression = "set transportation = :t"
-        values = {
-            ":t": transportation_data
-        }
-        table.update_item(
-            Key={
-                'city': city_name
-            },
-            UpdateExpression=update_expression,
-            ExpressionAttributeValues=values
-        )
+    table = dynamodb.Table(table_name)
+    update_expression = "set bike_score = :b, walk_score = :w, transit_score = :t"
+    values = {
+        ":b": transportation_data['bike_score'],
+        ":w": transportation_data['walk_score'],
+        ":t": transportation_data['transit_score']
+    }
+    table.update_item(
+        Key={
+            'city': city_name
+        },
+        UpdateExpression=update_expression,
+        ExpressionAttributeValues=values
+    )
 
 
 if __name__ == "__main__":
-    wsapikey = '44b56077f3bb3c2aa17c974ed75414b7'
-    latitude = 40.7128  
-    longitude = -74.0060 
-    address = '123 Main St, City, Country'
+    wsapikey = ''
+    # latitude = 40.7128  
+    # longitude = -74.0060 
+    # address = '123 Main St, City, Country'
 
-    walkscore_response = get_walkscore_response(wsapikey, latitude, longitude, address)
-    print(walkscore_response)
+    # walkscore_response = get_walkscore_response(wsapikey, latitude, longitude, address)
+    # print(walkscore_response)
+
+    table_name = 'travel-destination'  
+
+    update_all_transportation_data(wsapikey, table_name)
