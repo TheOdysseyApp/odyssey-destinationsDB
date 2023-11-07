@@ -1,4 +1,10 @@
+import boto3
 import requests
+
+
+dynamodb = boto3.resource('dynamodb')
+
+
 
 class WalkscoreAPI:
     def __init__(self, wsapikey, output='json'):
@@ -19,15 +25,17 @@ class WalkscoreAPI:
         if not latitude or not longitude or not address:
             return 'Required fields are empty.'
 
-        request = f'{self.base_uri}/score?format={self.output}&wsapikey={self.wsapikey}&lat={latitude}&lon={longitude}&address={address}'
+        request = f'{self.base_uri}/score?format={self.output}&wsapikey={self.wsapikey}&lat={latitude}&lon={longitude}&bike=1&transit=1'
         return self.fetch(request)
 
-    def get_transit_score(self, latitude, longitude, city, state, country, research):
+    def get_transit_score(self, latitude, longitude, city, state):
         if not latitude or not longitude or not city or not state:
             return 'Required fields are empty.'
 
-        request = f'{self.base_uri}/transit/score/?wsapikey={self.wsapikey}&lat={latitude}&lon={longitude}&city={city}&state={state}&format={self.output}'
+        request = f'{self.base_uri}/transit/score/?wsapikey={self.wsapikey}&lat={latitude}&lon={longitude}&city={city}&state={state}&format={self.output}&bike=1&transit=1'
         return self.fetch(request)
+    
+
 
     def get_transit_stop_search(self):
         pass
@@ -62,12 +70,64 @@ def get_walkscore_response(wsapikey, latitude, longitude, address):
     response = walkscore_api.get_walkscore(latitude, longitude, address)
     return response
 
+def scan_dynamodb_table(table_name):
+    table = dynamodb.Table(table_name)
+    response = table.scan()
+    return response.get('Items', [])
+
+def update_all_transportation_data(wsapikey, table_name):
+    items = scan_dynamodb_table(table_name)
+    for item in items:
+        city_name = item.get('city')
+        latitude = item.get('latitude')
+        longitude = item.get('longitude')
+
+        if latitude and longitude:
+            walkscore_response = get_walkscore_response(wsapikey, latitude, longitude, city_name)
+            
+            if walkscore_response.get('status') == 1:
+                walkscore = walkscore_response.get('walkscore')
+                description = walkscore_response.get('description')
+                bike_score = walkscore_response.get('bike', {}).get('score')
+                bike_description = walkscore_response.get('bike', {}).get('description')
+                transit_score = walkscore_response.get('transit', {}).get('score')
+                transit_description = walkscore_response.get('transit', {}).get('description')
+                
+                transportation_data = {
+                    "bike_score": {str(bike_score): bike_description},
+                    "walk_score": {str(walkscore): description},
+                    "transit_score": {str(transit_score): transit_description}
+                }
+
+                upload_transportation_data(table_name, city_name, transportation_data)
+            else:
+                print(f"Error fetching Walkscore data for {city_name}: {walkscore_response}")
+    
+    
+def upload_transportation_data(table_name, city_name, transportation_data):
+        table = dynamodb.Table(table_name)
+        update_expression = "set transportation = :t"
+        values = {
+            ":t": transportation_data
+        }
+        table.update_item(
+            Key={
+                'city': city_name
+            },
+            UpdateExpression=update_expression,
+            ExpressionAttributeValues=values
+        )
+
 
 if __name__ == "__main__":
     wsapikey = '44b56077f3bb3c2aa17c974ed75414b7'
-    latitude = 40.7128  
-    longitude = -74.0060 
-    address = '123 Main St, City, Country'
+    # latitude = 40.7128  
+    # longitude = -74.0060 
+    # address = '123 Main St, City, Country'
 
-    walkscore_response = get_walkscore_response(wsapikey, latitude, longitude, address)
-    print(walkscore_response)
+    # walkscore_response = get_walkscore_response(wsapikey, latitude, longitude, address)
+    # print(walkscore_response)
+
+    table_name = 'travel-destination'  
+
+    update_all_transportation_data(wsapikey, table_name)
