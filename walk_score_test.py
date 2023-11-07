@@ -121,13 +121,9 @@ def upload_transportation_data(table_name, city_name, transportation_data):
 
 if __name__ == "__main__":
     wsapikey = '44b56077f3bb3c2aa17c974ed75414b7'
-    # latitude = 40.7128  
-    # longitude = -74.0060 
-    # address = '123 Main St, City, Country'
+    latitude = 40.7128  
+    longitude = -74.0060 
+    address = '123 Main St, City, Country'
 
-    # walkscore_response = get_walkscore_response(wsapikey, latitude, longitude, address)
-    # print(walkscore_response)
-
-    table_name = 'travel-destination'  
-
-    update_all_transportation_data(wsapikey, table_name)
+    walkscore_response = get_walkscore_response(wsapikey, latitude, longitude, address)
+    print(walkscore_response)
