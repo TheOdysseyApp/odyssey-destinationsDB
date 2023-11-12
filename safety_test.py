@@ -23,17 +23,21 @@ def main():
                 latitude = item["latitude"]["N"]
                 longitude = item["longitude"]["N"]
                 try:
-                    response = amadeus_client.safety.safety_rated_locations.get(longitude=longitude, latitude=latitude)
+                    response = amadeus_client.safety.safety_rated_locations.get(longitude=longitude, latitude=latitude, radius=5)
                     # city_name = response.data[0]["name"]
                     safety_scores = response.data[0]["safetyScores"] # will check if key works
                     # might have to loop response data to make sure correct city info is getting pulled
                     # print(response.data[0]["name"])
                     # print(response.data[0]["safetyScores"])
                     # print(response.data[0]["safetyScores"]["overall"])
-                    safety_data = {"M": {"lgbtq":{"N":str(safety_scores["lgbtq"])}, "medical":{"N":str(safety_scores["medical"])}, 
-                                        "overall":{"N":str(safety_scores["overall"])}, "physical_harm":{"N":str(safety_scores["physicalHarm"])}, 
+                    safety_data = {"M": {"lgbtq":{"N":str(safety_scores["lgbtq"])}, 
+                                         "medical":{"N":str(safety_scores["medical"])}, 
+                                        "overall":{"N":str(safety_scores["overall"])}, 
+                                        "physical_harm":{"N":str(safety_scores["physicalHarm"])}, 
                                         "political_freedom":{"N":str(safety_scores["politicalFreedom"])}, 
-                                        "theft":{"N":str(safety_scores["theft"])}, "women":{"N":str(safety_scores["women"])}}}
+                                        "theft":{"N":str(safety_scores["theft"])}, 
+                                        "women":{"N":str(safety_scores["women"])}}
+                                }
                     # need to check that this is correct later
                     try:
                         response = client.update_item(
