@@ -27,7 +27,29 @@ def main():
                 try:
                     response = amadeus_client.safety.safety_rated_locations.get(longitude=longitude, latitude=latitude, radius=7)
                     if city in no_city:
-                        safety_scores = response.data[0]["safetyScores"]
+                        num = len(response.data)
+                        safety_scores = {"lgbtq":0, 
+                                        "medical":0, 
+                                        "overall":0, 
+                                        "physicalHarm":0, 
+                                        "politicalFreedom":0, 
+                                        "theft":0, 
+                                        "women":0}
+                        for data in response.data:
+                            safety_scores["lgbtq"] += data["safetyScores"]["lgbtq"]
+                            safety_scores["medical"] += data["safetyScores"]["medical"]
+                            safety_scores["overall"] += data["safetyScores"]["overall"]
+                            safety_scores["physicalHarm"] += data["safetyScores"]["physicalHarm"]
+                            safety_scores["politicalFreedom"] += data["safetyScores"]["politicalFreedom"]
+                            safety_scores["theft"] += data["safetyScores"]["theft"]
+                            safety_scores["women"] += data["safetyScores"]["women"]
+                        safety_scores["lgbtq"] //= num
+                        safety_scores["medical"] //= num
+                        safety_scores["overall"] //= num
+                        safety_scores["physicalHarm"] //= num
+                        safety_scores["politicalFreedom"] //= num
+                        safety_scores["theft"] //= num
+                        safety_scores["women"] //= num
                     else:
                         for data in response.data:
                             if data["subType"] == "CITY":
@@ -38,7 +60,7 @@ def main():
                                     safety_scores = data["safetyScores"]
                                     break
                     safety_data = {"M": {"lgbtq":{"N":str(safety_scores["lgbtq"])}, 
-                                         "medical":{"N":str(safety_scores["medical"])}, 
+                                        "medical":{"N":str(safety_scores["medical"])}, 
                                         "overall":{"N":str(safety_scores["overall"])}, 
                                         "physical_harm":{"N":str(safety_scores["physicalHarm"])}, 
                                         "political_freedom":{"N":str(safety_scores["politicalFreedom"])}, 
@@ -63,6 +85,9 @@ def main():
                 except ResponseError as error:
                     print(error)
                     print(f'Couldn\'t update safety of {city}')
+                except Exception as e:
+                    print(e)
+                    print(f'Couldn\'t update safety of {city}')
 
 
         else:
@@ -70,66 +95,6 @@ def main():
     except Exception as e:
         print(f"Error: {e}")
 
-
-    #TESTING STUFF
-
-    # item structure -> { "name_of_attribute": { "data_type": data_value } }
-    
-    # amadeus_client = create_amadeus_client()
-    # try:
-    #     response = amadeus_client.safety.safety_rated_locations.get(longitude=-117.82311, latitude=33.66946, radius=7)
-    #     # city_name = response.data[0]["name"]
-    #     for data in response.data:
-    #         if data["subType"] == "CITY":
-    #             safety_scores = data["safetyScores"]
-    #             # print(safety_scores)
-    #             break
-    #     # safety_scores = response.data[0]["safetyScores"]
-    #     safety_data = {"M": {"lgbtq":{"N":str(safety_scores["lgbtq"])}, 
-    #                                     "medical":{"N":str(safety_scores["medical"])}, 
-    #                                     "overall":{"N":str(safety_scores["overall"])}, 
-    #                                     "physical_harm":{"N":str(safety_scores["physicalHarm"])}, 
-    #                                     "political_freedom":{"N":str(safety_scores["politicalFreedom"])}, 
-    #                                     "theft":{"N":str(safety_scores["theft"])}, 
-    #                                     "women":{"N":str(safety_scores["women"])}}}
-    #     # print(response.data[0]["name"])
-    #     # print(response.data[0]["safetyScores"])
-    #     # print(response.data[0]["safetyScores"]["overall"])
-    #     # item_data = {
-    #     #     "city": {"S": city_name},
-    #     #     "country": {"S": "Spain"},
-    #     #     "safety": {"M": {"lgbtq":{"N":str(safety_scores["lgbtq"])}, "medical":{"N":str(safety_scores["medical"])}, 
-    #     #                      "overall":{"N":str(safety_scores["overall"])}, "physical_harm":{"N":str(safety_scores["physicalHarm"])}, 
-    #     #                      "political_freedom":{"N":str(safety_scores["politicalFreedom"])}, 
-    #     #                      "theft":{"N":str(safety_scores["theft"])}, "women":{"N":str(safety_scores["women"])}}}
-    #     # }
-    #     # try:
-    #     #     client.put_item(
-    #     #         TableName=table_name,
-    #     #         Item={k: v for k, v in item_data.items()}
-    #     #     )
-    #     #     print("Item created successfully.")
-    #     # except Exception as e:
-    #     #     print(f"Error: {e}")
-    # # except ResponseError as error:
-    # #     print(error)
-
-    # # try:
-    #     response = client.update_item(
-    #         TableName="travel-destination",
-    #         Key={"city": {"S": "test_city"}}, 
-    #         UpdateExpression="set #safety = :safety", 
-    #         ExpressionAttributeNames={
-    #             "#safety": "safety",
-    #         },
-    #         ExpressionAttributeValues={
-    #             ":safety": safety_data
-    #         },
-    #         ReturnValues="UPDATED_NEW",
-    #     )
-    #     print("Items updated successfully")
-    # except Exception as e:
-    #     print(f"Error: {e}")
 
 
 if __name__ == "__main__":
